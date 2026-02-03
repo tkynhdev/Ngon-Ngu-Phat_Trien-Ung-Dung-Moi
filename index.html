@@ -4,121 +4,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bài tập JS - Quản lý sản phẩm</title>
+    <title>Quản lý Sản phẩm (Soft Delete & Auto ID)</title>
     <style>
         body {
             font-family: sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            /* Căn giữa trang */
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 10px;
         }
 
-        h1,
-        h2 {
-            color: #333;
-        }
-
-        section {
-            border: 1px solid #ddd;
-            padding: 15px;
+        /* Form nhập liệu */
+        .input-group {
             margin-bottom: 20px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 8px;
         }
 
-        /* Style cho bảng hiển thị dữ liệu */
+        .input-group input,
+        .input-group select {
+            padding: 8px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 8px 15px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        /* Bảng dữ liệu */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
-            background-color: white;
         }
 
         th,
         td {
-            border: 1px solid #ccc;
-            padding: 8px;
+            border: 1px solid #ddd;
+            padding: 10px;
             text-align: left;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #f4f4f4;
         }
 
-        .highlight {
-            color: green;
-            font-weight: bold;
+        /* CSS cho Soft Delete (Xóa mềm) */
+        .deleted-row {
+            text-decoration: line-through;
+            /* Gạch ngang chữ */
+            color: #999;
+            /* Làm mờ chữ */
+            background-color: #ffe6e6;
+            /* Nền đỏ nhạt */
         }
 
-        .error {
-            color: red;
-            font-weight: bold;
+        .btn-delete {
+            background: #dc3545;
         }
 
-        /* Khu vực giả lập console cho câu 8, 9 */
-        pre {
-            background: #333;
-            color: #eee;
-            padding: 10px;
-            overflow-x: auto;
+        .btn-delete:hover {
+            background: #a71d2a;
+        }
+
+        /* Ẩn nút xóa đối với hàng đã xóa rồi (nếu muốn) */
+        .deleted-row .btn-delete {
+            display: none;
         }
     </style>
 </head>
 
 <body>
-    <h1>Kết quả bài tập JavaScript</h1>
+    <h1>Quản lý Sản phẩm</h1>
 
-    <section>
-        <h2>Câu 1: Constructor Function</h2>
-        <p>Đã khai báo hàm <code>Product</code> trong file script.js.</p>
-    </section>
+    <div class="input-group">
+        <h3>Thêm sản phẩm mới</h3>
+        <input type="text" id="name" placeholder="Tên sản phẩm">
+        <input type="number" id="price" placeholder="Giá">
+        <select id="category">
+            <option value="Laptop">Laptop</option>
+            <option value="Phone">Phone</option>
+            <option value="Accessories">Accessories</option>
+        </select>
+        <button onclick="addProduct()">Thêm mới</button>
+        <p><i>*ID sẽ tự động tăng dựa trên Max ID hiện tại.</i></p>
+    </div>
 
-    <section>
-        <h2>Câu 2: Danh sách sản phẩm khởi tạo</h2>
-        <div id="result-q2"></div>
-    </section>
-
-    <section>
-        <h2>Câu 3: Mảng chỉ chứa Name và Price</h2>
-        <div id="result-q3"></div>
-    </section>
-
-    <section>
-        <h2>Câu 4: Các sản phẩm còn hàng (quantity > 0)</h2>
-        <div id="result-q4"></div>
-    </section>
-
-    <section>
-        <h2>Câu 5: Kiểm tra giá trên 30.000.000đ</h2>
-        <p>Kết quả: <span id="result-q5" class="highlight"></span></p>
-    </section>
-
-    <section>
-        <h2>Câu 6: Kiểm tra tất cả Accessories có đang bán không</h2>
-        <p>Kết quả: <span id="result-q6"></span></p>
-    </section>
-
-    <section>
-        <h2>Câu 7: Tổng giá trị kho hàng</h2>
-        <p>Tổng cộng: <span id="result-q7" class="highlight" style="font-size: 1.2em;"></span> VNĐ</p>
-    </section>
-
-    <section>
-        <h2>Câu 8: Kết quả duyệt mảng (for...of)</h2>
-        <pre id="result-q8"></pre>
-    </section>
-
-    <section>
-        <h2>Câu 9: Kết quả duyệt thuộc tính (for...in)</h2>
-        <pre id="result-q9"></pre>
-    </section>
-
-    <section>
-        <h2>Câu 10: Danh sách tên SP đang bán và còn hàng</h2>
-        <ul id="result-q10"></ul>
-    </section>
+    <div id="app"></div>
 
     <script src="script.js"></script>
 </body>

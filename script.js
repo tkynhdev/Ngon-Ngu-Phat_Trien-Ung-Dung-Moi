@@ -1,34 +1,4 @@
-function veBang(data, idHienThi) {
-    let container = document.getElementById(idHienThi);
-    if (data.length === 0) {
-        container.innerHTML = "Không có dữ liệu";
-        return;
-    }
-    let cols = Object.keys(data[0]);
-
-    let html = '<table border="1" cellpadding="5" cellspacing="0" style="width:100%"><thead><tr>';
-    for (let col of cols) {
-        html += `<th>${col.toUpperCase()}</th>`;
-    }
-    html += '</tr></thead><tbody>';
-
-    for (let item of data) {
-        html += '<tr>';
-        for (let col of cols) {
-            html += `<td>${item[col]}</td>`;
-        }
-        html += '</tr>';
-    }
-    html += '</tbody></table>';
-    container.innerHTML = html;
-}
-
-function inKetQua(text, idHienThi) {
-    document.getElementById(idHienThi).innerText = text;
-}
-
-
-// Câu 1
+// 1. Khai báo Constructor (Cập nhật thêm isDeleted)
 function Product(id, name, price, quantity, category, isAvailable) {
     this.id = id;
     this.name = name;
@@ -36,73 +6,103 @@ function Product(id, name, price, quantity, category, isAvailable) {
     this.quantity = quantity;
     this.category = category;
     this.isAvailable = isAvailable;
+    this.isDeleted = false; // Mặc định khi tạo mới chưa bị xóa
 }
 
-// Câu 2
-const listSP = [
+// 2. Khởi tạo dữ liệu mẫu
+let listSP = [
     new Product(1, "Laptop Dell", 20000000, 10, "Laptop", true),
     new Product(2, "Iphone 15", 35000000, 5, "Phone", true),
-    new Product(3, "Chuột Gaming", 500000, 0, "Accessories", true), // Hết hàng
+    new Product(3, "Chuột Gaming", 500000, 0, "Accessories", true),
     new Product(4, "Bàn phím cơ", 1000000, 20, "Accessories", true),
-    new Product(5, "Tai nghe Sony", 2500000, 15, "Accessories", false), // Ngừng bán
-    new Product(6, "Samsung S24", 25000000, 2, "Phone", true)
 ];
-veBang(listSP, 'result-q2');
 
+// --- CÁC HÀM XỬ LÝ CHÍNH ---
 
-// Câu 3
-let listNamePrice = listSP.map(item => {
-    return { name: item.name, price: item.price };
-});
-veBang(listNamePrice, 'result-q3');
+// Hàm Render: Hiển thị danh sách ra HTML
+function render() {
+    let html = `
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên SP</th>
+                <th>Giá</th>
+                <th>Danh mục</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>`;
 
+    for (let item of listSP) {
+        // Nếu isDeleted = true thì thêm class 'deleted-row' để gạch ngang
+        let rowClass = item.isDeleted ? "deleted-row" : "";
+        let statusText = item.isDeleted ? "Đã xóa" : (item.quantity > 0 ? "Còn hàng" : "Hết hàng");
 
-// Câu 4
-let spConHang = listSP.filter(item => item.quantity > 0);
-veBang(spConHang, 'result-q4');
+        html += `
+            <tr class="${rowClass}">
+                <td>${item.id}</td>
+                <td>${item.name}</td>
+                <td>${item.price.toLocaleString()} đ</td>
+                <td>${item.category}</td>
+                <td>${statusText}</td>
+                <td>
+                    ${!item.isDeleted ? `<button class="btn-delete" onclick="softDelete(${item.id})">Xóa</button>` : ""}
+                </td>
+            </tr>`;
+    }
 
-
-// Câu 5
-let coSpDatTien = listSP.some(item => item.price > 30000000);
-inKetQua(coSpDatTien ? "CÓ sản phẩm trên 30 triệu" : "KHÔNG CÓ", 'result-q5');
-
-
-// Câu 6
-let listAccessory = listSP.filter(item => item.category === "Accessories");
-let checkAccessory = listAccessory.every(item => item.isAvailable === true);
-inKetQua(checkAccessory ? "Tất cả đều đang bán" : "KHÔNG phải tất cả đều đang bán", 'result-q6');
-
-
-// Câu 7
-let tongKho = listSP.reduce((total, item) => {
-    return total + (item.price * item.quantity);
-}, 0);
-inKetQua(tongKho + " VNĐ", 'result-q7');
-
-
-// Câu 8
-let ketQua8 = "";
-for (let item of listSP) {
-    let trangThai = item.isAvailable ? "Đang bán" : "Ngừng bán";
-    ketQua8 += `${item.name} - ${item.category} - ${trangThai}\n`;
+    html += `</tbody></table>`;
+    document.getElementById("app").innerHTML = html;
 }
-inKetQua(ketQua8, 'result-q8');
 
+// Hàm Thêm mới: ID tự tăng = Max ID + 1
+function addProduct() {
+    // Lấy dữ liệu từ ô input
+    let name = document.getElementById("name").value;
+    let price = Number(document.getElementById("price").value);
+    let category = document.getElementById("category").value;
 
-// Câu 9
-let ketQua9 = "";
-let spDauTien = listSP[0]; // Lấy sp đầu tiên làm mẫu
-for (let key in spDauTien) {
-    ketQua9 += `Thuộc tính: ${key} | Giá trị: ${spDauTien[key]}\n`;
+    if (!name || !price) {
+        alert("Vui lòng nhập tên và giá!");
+        return;
+    }
+
+    // --- LOGIC TỰ TĂNG ID ---
+    // B1: Tìm ID lớn nhất hiện có trong mảng
+    let maxId = 0;
+    if (listSP.length > 0) {
+        // Dùng reduce để tìm maxId
+        maxId = listSP.reduce((max, item) => Math.max(max, item.id), 0);
+    }
+    // B2: ID mới = Max ID + 1
+    let newId = maxId + 1;
+
+    // Tạo đối tượng mới (mặc định quantity=10, isAvailable=true cho nhanh)
+    let newProduct = new Product(newId, name, price, 10, category, true);
+
+    // Thêm vào mảng
+    listSP.push(newProduct);
+
+    // Reset ô input và vẽ lại bảng
+    document.getElementById("name").value = "";
+    document.getElementById("price").value = "";
+    render();
 }
-inKetQua(ketQua9, 'result-q9');
 
+// Hàm Xóa mềm: Chuyển isDeleted thành true
+function softDelete(id) {
+    if (confirm("Bạn có chắc muốn xóa sản phẩm này không?")) {
+        // Tìm sản phẩm cần xóa trong mảng
+        let product = listSP.find(item => item.id === id);
 
-// Câu 10
-let dsTenSp = listSP
-    .filter(item => item.isAvailable === true && item.quantity > 0)
-    .map(item => `<li>${item.name}</li>`)
-    .join(""); // Nối lại thành chuỗi
+        if (product) {
+            product.isDeleted = true; // Đánh dấu là đã xóa (Soft Delete)
+            render(); // Vẽ lại giao diện
+        }
+    }
+}
 
-// Hiển thị câu 10
-document.getElementById('result-q10').innerHTML = dsTenSp;
+// Chạy hàm render lần đầu khi tải trang
+render();
