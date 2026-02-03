@@ -4,12 +4,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bài tập JS - Product Management</title>
+    <title>Bài tập JS - Quản lý sản phẩm</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            /* Căn giữa trang */
+        }
+
+        h1,
+        h2 {
+            color: #333;
+        }
+
+        section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        /* Style cho bảng hiển thị dữ liệu */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .highlight {
+            color: green;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* Khu vực giả lập console cho câu 8, 9 */
+        pre {
+            background: #333;
+            color: #eee;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Bài tập JS - Quản lý sản phẩm</h1>
-    <p>Nhấn F12 (hoặc chuột phải -> Inspect) và chọn tab <strong>Console</strong> để xem kết quả.</p>
+    <h1>Kết quả bài tập JavaScript</h1>
+
+    <section>
+        <h2>Câu 1: Constructor Function</h2>
+        <p>Đã khai báo hàm <code>Product</code> trong file script.js.</p>
+    </section>
+
+    <section>
+        <h2>Câu 2: Danh sách sản phẩm khởi tạo</h2>
+        <div id="result-q2"></div>
+    </section>
+
+    <section>
+        <h2>Câu 3: Mảng chỉ chứa Name và Price</h2>
+        <div id="result-q3"></div>
+    </section>
+
+    <section>
+        <h2>Câu 4: Các sản phẩm còn hàng (quantity > 0)</h2>
+        <div id="result-q4"></div>
+    </section>
+
+    <section>
+        <h2>Câu 5: Kiểm tra giá trên 30.000.000đ</h2>
+        <p>Kết quả: <span id="result-q5" class="highlight"></span></p>
+    </section>
+
+    <section>
+        <h2>Câu 6: Kiểm tra tất cả Accessories có đang bán không</h2>
+        <p>Kết quả: <span id="result-q6"></span></p>
+    </section>
+
+    <section>
+        <h2>Câu 7: Tổng giá trị kho hàng</h2>
+        <p>Tổng cộng: <span id="result-q7" class="highlight" style="font-size: 1.2em;"></span> VNĐ</p>
+    </section>
+
+    <section>
+        <h2>Câu 8: Kết quả duyệt mảng (for...of)</h2>
+        <pre id="result-q8"></pre>
+    </section>
+
+    <section>
+        <h2>Câu 9: Kết quả duyệt thuộc tính (for...in)</h2>
+        <pre id="result-q9"></pre>
+    </section>
+
+    <section>
+        <h2>Câu 10: Danh sách tên SP đang bán và còn hàng</h2>
+        <ul id="result-q10"></ul>
+    </section>
 
     <script src="script.js"></script>
 </body>
