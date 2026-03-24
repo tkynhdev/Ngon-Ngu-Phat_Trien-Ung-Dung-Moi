@@ -12,15 +12,16 @@ const transporter = nodemailer.createTransport({
 });
 
 module.exports = {
-    sendMail: async (to,url) => {
+    sendMail: async ({ to, subject, text, html }) => {
         const info = await transporter.sendMail({
             from: 'Admin@hahah.com',
             to: to,
-            subject: "request resetpassword email",
-            text: "click vao day de reset", // Plain-text version of the message
-            html: "click vao <a href="+url+">day</a> de reset", // HTML version of the message
+            subject: subject,
+            text: text,
+            html: html,
         });
 
         console.log("Message sent:", info.messageId);
+        return info;
     }
 }
